@@ -3,7 +3,17 @@ entries:
   simple-web:
   - apiVersion: v2
     appVersion: latest
-    created: "2023-12-07T13:56:43.949673+08:00"
+    created: "2023-12-07T16:46:49.811352+08:00"
+    description: A Helm chart for Kubernetes
+    digest: 661872ea75f5c5e7ce323dc786d1e1a838d576c7fa22d1f89c7aedb8e49d40ba
+    name: simple-web
+    type: application
+    urls:
+    - simple-web-1.1.1.tgz
+    version: 1.1.1
+  - apiVersion: v2
+    appVersion: latest
+    created: "2023-12-07T16:46:49.810966+08:00"
     description: A Helm chart for Kubernetes
     digest: e10c1a824d371148f6f22c70abf472b5a4118981aad69341957bf2b9ccb4e714
     name: simple-web
@@ -13,7 +23,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: latest
-    created: "2023-12-07T13:56:43.949237+08:00"
+    created: "2023-12-07T16:46:49.81051+08:00"
     description: A Helm chart for Kubernetes
     digest: d42d274211791ad0e9213b2995dcea3dab5a778e19ce02106a4879040b7483ab
     name: simple-web
@@ -21,4 +31,4 @@ entries:
     urls:
     - simple-web-1.0.4.tgz
     version: 1.0.4
-generated: "2023-12-07T13:56:43.947968+08:00"
+generated: "2023-12-07T16:46:49.809647+08:00"
