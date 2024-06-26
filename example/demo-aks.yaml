@@ -1,0 +1,82 @@
+# Default values for simple-web.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# if you want to use this chart to deploy different instance, just nameOverride.
+nameOverride: 'demo-aks'
+
+labels:
+  label-for: backstage
+
+image:
+  repository: nginx
+  tag: 'latest'
+  pullPolicy: Always
+  # entrypointOverride:
+  #   command: ["/bin/bash"]
+  #   args: ["-c", "sleep 2592000"]
+
+service:
+  port: 80
+
+# strategy:
+#   type: RollingUpdate
+#   rollingUpdate:
+#     maxSurge: 25%
+#     maxUnavailable: 0
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: 80
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: 80
+
+ingress:
+  enabled: true
+  className: psg
+  hosts:
+    - host: demo-aks.shellab.io
+      paths:
+        - path: /
+          pathType: Prefix
+
+env:
+  - name: key1
+    value: value1
+  - name: key2
+    value: value2
+
+envFiles:
+  - name: env1.json
+    data: |
+      {
+        "a": "t1",
+        "b": "t2",
+        "c": "t3"
+      }
+    mountTo: /app/
+  - name: env2.txt
+    data: |
+      Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim
+      labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet.
+      Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident.
+      Nostrud officia pariatur ut officia.
+    mountTo: /app/
+
+secret:
+  - name: secret1
+    value: ZGFuaWVs
+  - name: secret2
+    value: YWxhbg==
+
+secretFiles:
+  - name: hello.json
+    data: eWF5YXlheWF5YXlh
+    mountTo: /etc/
+  - name: world.json
+    data: aGVsbG93b3JsZAo=
+    mountTo: /tmp/
