@@ -1,0 +1,160 @@
+# Default values for simple-web.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: nginx
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+  # Overrides the container entrypoint
+  entrypointOverride: {}
+    # command: ["/bin/bash"]
+    # args: ["-c", "sleep 2592000"]
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+labels: {} # will apply to all resources
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80 # port for container and service, also ingress will this port to route traffic to service.
+
+strategy: {}
+  # type: RollingUpdate
+  # rollingUpdate:
+  #   maxSurge: 25%
+  #   maxUnavailable: 25%
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+livenessProbe: {}
+  # httpGet:
+  #   path: /
+  #   port: http or port number ex: 8080
+  # periodSeconds: 30
+
+readinessProbe: {}
+  # httpGet:
+  #   path: /
+  #   port: http or port number ex: 8080
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+initContainers: []
+  # - name: sysctl-tuning
+  #   image: docker.io/busybox
+  #   imagePullPolicy: IfNotPresent
+  #   command: ["/bin/sh"]
+  #   args:
+  #     - -c
+  #     - sysctl -w fs.file-max=2097152 kernel.sysrq=0 kernel.core_uses_pid=1 kernel.msgmnb=65536 kernel.msgmax=65536 kernel.shmmax=68719476736 kernel.shmall=4294967296
+  #     - sysctl -w vm.swappiness=10 vm.dirty_ratio=40 vm.dirty_background_ratio=10 net.core.somaxconn=65535
+  #     - sysctl -w net.ipv4.conf.default.rp_filter=1 net.ipv4.conf.default.accept_source_route=0 net.ipv4.ip_forward=0 net.ipv4.ip_local_port_range="2000 65535"
+  #     - sysctl -w net.ipv4.tcp_tw_reuse=1
+  #     - ulimit -l unlimited
+  #     - sleep 5
+  #   securityContext:
+  #     privileged: true
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+healthEndpoint: {}
+
+env: []
+  # - name: key1
+  #   value: value1
+  # - name: key2
+  #   value: value2
+
+envFiles: []
+  # - name: env1.json
+  #   data: |
+  #     {
+  #       "a": "t1",
+  #       "b": "t2",
+  #       "c": "t3"
+  #     }
+  #   mountTo: /app/
+  # - name: env2.txt
+  #   data: |
+  #     Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim
+  #     labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet.
+  #     Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident.
+  #     Nostrud officia pariatur ut officia.
+  #   mountTo: /tmp/
+
+secret: []
+  # - name: secret1
+  #   value: ZGFuaWVs
+  # - name: secret2
+  #   value: YWxhbg==
+
+secretFiles: []
+  # - name: hello.json
+  #   data: eWF5YXlheWF5YXlh
+  #   mountTo: /etc/
+  # - name: world.json
+  #   data: aGVsbG93b3JsZAo=
+  #   mountTo: /tmp/

@@ -1,0 +1,31 @@
+{{- if.Values.env }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "simple-web.fullname" . }}-env
+  {{- if .Values.labels }}
+  labels:
+    {{- toYaml .Values.labels | nindent 4 }}
+  {{- end }}
+data:
+  {{- range .Values.env }}
+  {{ .name }}: {{ .value | quote }}
+  {{- end }}
+{{- end }}
+
+{{- if.Values.envFiles }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "simple-web.fullname" . }}-env-files
+  {{- if .Values.labels }}
+  labels:
+    {{- toYaml .Values.labels | nindent 4 }}
+  {{- end }}
+data:
+  {{- range .Values.envFiles }}
+  {{ .name }}: |
+    {{ .data | nindent 4 | trim }}
+  {{- end }}
+{{- end }}

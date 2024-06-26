@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "simple-web.fullname" . }}
+  labels:
+    {{- include "simple-web.labels" . | nindent 4 }}
+    {{- if .Values.labels }}
+      {{- toYaml .Values.labels | nindent 4 }}
+    {{- end }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  {{- if .Values.strategy }}
+  strategy:
+    {{- toYaml .Values.strategy | nindent 4 }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "simple-web.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "simple-web.selectorLabels" . | nindent 8 }}
+        {{- if .Values.labels }}
+          {{- toYaml .Values.labels | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "simple-web.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if or .Values.envFiles .Values.secretFiles }}
+      volumes:
+        {{- if .Values.envFiles }}
+        - name: env-files
+          configMap:
+            name: {{ include "simple-web.fullname" . }}-env-files
+        {{- end }}
+        {{- if .Values.secretFiles }}
+        - name: secret-files
+          secret:
+            secretName: {{ include "simple-web.fullname" . }}-secret-files
+        {{- end }}
+      {{- end }}
+      {{- if .Values.initContainers }}
+      initContainers:
+        {{- toYaml .Values.initContainers | nindent 6 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.image.entrypointOverride }}
+            {{- toYaml .Values.image.entrypointOverride | nindent 10 }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          {{- if .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- if or .Values.env .Values.secret }}
+          envFrom:
+          {{- end }}
+          {{- if .Values.env }}
+            - configMapRef:
+                name: {{ include "simple-web.fullname" . }}-env
+          {{- end }}
+          {{- if .Values.secret }}
+            - secretRef:
+                name: {{ include "simple-web.fullname" . }}-secret-env
+          {{- end }}
+          {{- if or .Values.envFiles .Values.secretFiles }}
+          volumeMounts:
+            {{- range .Values.secretFiles }}
+            - name: secret-files
+              mountPath: {{ .mountTo }}{{ .name }}
+              subPath: {{ .name }}
+            {{- end }}
+            {{- range .Values.envFiles }}
+            - name: env-files
+              mountPath: {{ .mountTo }}{{ .name }}
+              subPath: {{ .name }}
+            {{- end }}
+          {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
