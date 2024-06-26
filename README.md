@@ -378,10 +378,28 @@ demo-api:
 
 - **helm upgrade --install demo-project project-helm-1.0.0.tgz -f project-helm.yaml**
 
+## Pacakge simple-web
+
+> pacakge helm will generate a package file which named **simple-web-1.1.1.tgz**
+
+- **helm package simple-web --version 1.1.1 --app-version latest**
+
 ## Host in Artifacthub.io
 
-1. create new repo **https://github.com/DachiChang/helm-simple-web**
-2. git switch --orphan gh-pages (you will create a empty branch)
-3. mv simple-web-1.1.1.tgz . (push helm pacakge to the repo)
-4. helm repo index . (create helm repo index)
-5. artifacthub.io create a helm repo url point to https://dachichang.github.io/basic-auth-s3-nginx/
+1. create new repo
+   - **https://github.com/DachiChang/helm-simple-web**
+2. create gh-pages (github pages to host helm package files)
+   - git checkout --orphan gh-pages && git rm -rf .
+3. push helm package to gh-pages branch
+   - mv simple-web-1.1.1.tgz .
+4. create helm repo index
+   - helm repo index .
+5. commit and && push gh-pages
+   ```
+   -rw-r--r--@ 1 dachichang  staff   160 Jun 26 11:14 artifacthub-repo.yml
+   -rw-r--r--@ 1 dachichang  staff  1016 Jun 26 11:14 index.yaml
+   -rw-r--r--@ 1 dachichang  staff  5226 Jun 26 11:14 simple-web-1.0.4.tgz
+   -rw-r--r--@ 1 dachichang  staff  5544 Jun 26 11:14 simple-web-1.1.0.tgz
+   -rw-r--r--@ 1 dachichang  staff  5557 Jun 26 11:14 simple-web-1.1.1.tgz
+   ```
+6. artifacthub.io create a helm repo url point to https://dachichang.github.io/helm-simple-web/
