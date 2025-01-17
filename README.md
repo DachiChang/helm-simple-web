@@ -1,6 +1,6 @@
 # How to use simple-web helm chart
 
-use [simple-web](https://artifacthub.io/packages/helm/simple-web/simple-web) helm chart to install all web base application
+Use [simple-web](https://artifacthub.io/packages/helm/simple-web/simple-web) helm chart to install all web base application
 
 ## Prepare
 
