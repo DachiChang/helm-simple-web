@@ -21,7 +21,6 @@ You can use $ENV prefix to separate the values of environments. for example
 
 - dev-values.yaml for dev
 - tst-values.yaml for tst
-- uat-values.yaml for uat
 
 #### example values.yaml
 
